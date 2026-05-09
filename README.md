@@ -14,7 +14,15 @@
 </div>
 
 ---
+## 📸 Screenshots
 
+### Interface
+![Interface](screenshots/tool-preview.png)
+### Fish Shell with kitty
+![Fish Shell](screenshots/split.png)
+
+### BurpSuite Pro Installation
+![BurpSuite Pro](screenshots/burpsuite.png)
 ## 📋 Table of Contents
 
 - [Features](#-features)
