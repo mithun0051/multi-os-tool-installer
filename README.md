@@ -65,14 +65,14 @@
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/multi-os-tool-installer.git
-cd multi-os-tool-installer
+git clone https://github.com/mithunjana0051/multi-os.git
+cd multi-os
 
 # 2. Make executable
-chmod +x arch_linux_debian_v6.0.sh
+chmod +x multi-os-v6.0.sh
 
 # 3. Run
-./arch_linux_debian_v6.0.sh
+./multi-os-v6.0.sh
 ```
 
 > ⚠️ **Run as a regular user with sudo access** — do NOT run as root directly.
