@@ -1247,7 +1247,7 @@ done
 # ==================================================
 # CATPPUCCIN THEME
 # ==================================================
-include /home/$USER/.config/kitty/themes/catppuccin/themes/frappe.conf
+include /home/$USER/.config/kitty/themes/catppuccin/themes/mocha.conf
 
 allow_remote_control yes
 listen_on unix:/tmp/kitty-$PID
