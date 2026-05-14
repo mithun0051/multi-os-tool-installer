@@ -11,14 +11,8 @@ AQUA='\e[38;5;51m'
 MAGENTA='\e[35m'
 ORANGE='\e[38;5;208m'
 LAVENDER='\e[38;5;183m'
-# ===============================
-# Configuration
-# ===============================
 LOG_FILE="/tmp/tool_installer.log"
 DEBUG=false
-# ===============================
-# Display Banner
-# ===============================
 show_banner() {
     echo -e "${GREEN}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┓${RESET}"
     echo -e "${GREEN}┃   ${AQUA}Multi-OS Tool Installer${GREEN}           ┃ ${YELLOW} v6.0   ${GREEN}┃${RESET}"
@@ -50,9 +44,7 @@ show_banner() {
     
     echo -e "${GREEN}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${RESET}"
 }
-# ===============================
-# Logging Functions
-# ===============================
+# all-logs
 log() {
     local msg="$*"
     msg="${msg//$pkg/${YELLOW}$pkg${MAGENTA}}"
@@ -101,18 +93,13 @@ log_warning() {
     local msg="$*"
     echo -e "⚠️ ${YELLOW}WARNING: ${msg}${RESET}" | tee -a "$LOG_FILE"
 }
-# ===============================
-# Utility Functions
-# ===============================
+
 cleanup() {
     log_debug "Cleaning up temporary files"
     rm -rf /tmp/yay /tmp/ghauri /tmp/dirsearch /tmp/amass
 }
 
 trap cleanup EXIT
-# ===============================
-# System Detection
-# ===============================
 detect_os() {
     if [ -f /etc/arch-release ]; then
         echo "arch"
@@ -124,9 +111,7 @@ detect_os() {
 }
 
 OS_TYPE=$(detect_os)
-# ===============================
 # Package Manager Functions
-# ===============================
 install_pkg() {
     local pkg="$1"
     log_install "install package: $pkg"
@@ -200,9 +185,7 @@ install_pkg_aur() {
     fi
 }
 
-# ===============================
 # Manual Installation for Debian
-# ===============================
 install_manual_debian() {
     local pkg="$1"
     log "Attempting manual installation for Debian: $pkg"
@@ -231,7 +214,7 @@ install_manual_debian() {
             return 1 ;;
     esac
 }
-#=======sublime====
+#=======sublime_theme_config(cappuchin)=====
 sublime_config(){
     echo "Configuring sublime Text..."
     
@@ -242,7 +225,7 @@ sublime_config(){
     # Clone theme
     git clone https://github.com/catppuccin/sublime-text.git ~/.config/sublime-text/Packages/Catppuccin 2>/dev/null || true
     
-    # Create settings
+    
     cat > ~/.config/sublime-text/Packages/User/Preferences.sublime-settings <<'EOF'
 {
     "font_size": 17,
@@ -300,10 +283,8 @@ fi
         log_success "sublime text already installed"
     fi
 }
-#=============
-#==rust=========
+#==rust_manual_installation=========
 install_rustscan_manual() {
-# Skip manual installation on Arch - use AUR package instead
 if [ "$OS_TYPE" = "arch" ]; then
     yay -S --needed --noconfirm rustscan
     return 0
@@ -311,7 +292,6 @@ fi
     if ! command -v rustscan >/dev/null 2>&1; then
         log_install "install rustscan manually..."
         
-        # Get the latest release information
         local repo="bee-san/rustscan"
         local api_url="https://api.github.com/repos/$repo/releases/latest"
         
@@ -410,7 +390,7 @@ fi
         log_success "rustscan already installed - version: $version"
     fi
 }
-
+#=====gau_install======
 install_gau_manual() {
     export PATH="/usr/local/bin:$PATH"
     pkg="gau"
@@ -535,10 +515,10 @@ install_feroxbuster_manual() {
         local release_info
         release_info=$(curl -s "$api_url")
         
-        # Extract download URL for Linux x86_64 binary
+        # Extract download URL for Linux binary
         latest_url=$(echo "$release_info" | grep -oP '"browser_download_url": "\K[^"]*' | grep -E "x86_64.*linux.*tar" | head -1)
         
-        # Method 2: If first method fails, try alternative pattern matching
+        # Method 2: download
         if [ -z "$latest_url" ]; then
             log "trying alternative URL extraction..."
             latest_url=$(echo "$release_info" | grep -oP '"browser_download_url": "\K(.*feroxbuster.*linux.*x86_64[^"]*)' | head -1)
@@ -645,9 +625,7 @@ install_stacer_manual() {
     fi
 }
 
-# ===============================
 # Categories and Packages
-# ===============================
 declare -A categories
 
 if [ "$OS_TYPE" = "arch" ]; then
@@ -675,9 +653,7 @@ else
     categories[Active_Directory]="python3-impacket"
 fi
 
-# ===============================
 # Install AUR helper (Arch only)
-# ===============================
 install_yay() {
     pkg="yay"
     if [ "$OS_TYPE" != "arch" ]; then
@@ -711,65 +687,63 @@ install_yay() {
     fi
 }
 
-# ===============================
 # Check if package exists and is installed
-# ===============================
 check_package_status() {
     local pkg="$1"
     local status=2
 
-    set +e  # disable exit-on-error inside this function
+    set +e  
         # Special case for pyinstractor
     if [ "$pkg" = "pyinstractor" ]; then
         if [ -d "$HOME/Desktop/pyinstractor" ]; then
             set -e
-            return 1  # Installed
+            return 1  
         fi
     fi
     if [ "$pkg" = "ILSpy" ]; then
         if [ -d "$HOME/Desktop/ILSpy" ]; then
             set -e
-            return 1  # Installed
+            return 1  
         fi
     fi
     # Check if package is installed
     if [ "$OS_TYPE" = "arch" ]; then
         if pacman -Q "$pkg" &>/dev/null; then
             set -e
-            return 0  # Installed
+            return 0  
         fi
 
         # Check if exists in repos
         if pacman -Si "$pkg" &>/dev/null; then
             set -e
-            return 1  # Exists in repos, not installed
+            return 1  
         fi
 
         # Check if exists in AUR
         if command -v yay >/dev/null 2>&1; then
             if yay -Si "$pkg" &>/dev/null; then
                 set -e
-                return 1  # Exists in AUR, not installed
+                return 1  
             fi
         fi
     else
         # Debian-based check
         if dpkg -l "$pkg" &>/dev/null; then
             set -e
-            return 0  # Installed
+            return 0  
         fi
 
         # Check if exists in repositories
         if apt-cache show "$pkg" &>/dev/null; then
             set -e
-            return 1  # Exists in repos, not installed
+            return 1  
         fi
         
         # Check if we have manual installation method
         case "$pkg" in
             "amass-bin"|"subfinder"|"nuclei"|"feroxbuster"|"stacer-git"|"burpsuitepro"|"gau"|"rustscan"|"sublime-text-4"|"pyinstractor"|"ILSpy")
                 set -e
-                return 1  # Has manual installation method
+                return 1  
                 ;;
         esac
     fi
@@ -790,9 +764,7 @@ ensure_pkg() {
     install_pkg "$pkg"
     return $?  # Return the exit code from install_pkg
 }
-# ===============================
 # Install Packages with existence check
-# ===============================
 install_packages() {
     local pkgs=("$@")
     local to_install=()
@@ -950,9 +922,7 @@ install_packages() {
     $wordlist_installed && post_wordlist_setup 2>/dev/null || true
     $vmware_installed && post_vmware_setup 2>/dev/null || true
 }
-# ===============================
 # Validate Input Format
-# ===============================
 validate_input() {
     local input="$1"
 
@@ -963,9 +933,7 @@ validate_input() {
         return 1
     fi
 }
-# ===============================
 # Parse selections (letters for categories, numbers for tools)
-# ===============================
 parse_mixed_selections() {
     local input="$1"
     local selections=()
@@ -995,9 +963,7 @@ parse_mixed_selections() {
     printf '%s\n' "${selections[@]}"
     return 0
 }
-# ===============================
-# Main Menu
-# ===============================
+#========== Main Menu================
 show_menu() {
     echo -e "${YELLOW}[1]${GREEN} Install ALL categories${RESET}"
     echo -e "${YELLOW}[2] ${GREEN}Install by selection${RESET}"
@@ -1010,9 +976,7 @@ show_menu() {
     echo -e "${YELLOW}[8] ${RED}Exit${RESET}"
 }
 
-# ===============================
 # Install all categories
-# ===============================
 install_all_categories() {
     local all_pkgs=()
     for cat in "${!categories[@]}"; do
@@ -1023,11 +987,8 @@ install_all_categories() {
     install_packages "${all_pkgs[@]}"|| return 1 
 }
 
-# ===============================
 # Install by selection 
-# ===============================
 install_by_selection() {
-    # Initialize global arrays first
     declare -ga ALL_TOOLS=()
     declare -ga TOOL_TO_CATEGORY=()
     declare -ga CAT_ARRAY=()
@@ -1152,17 +1113,13 @@ install_by_selection() {
         echo "Press Enter to continue..."; read -r
     done
 }
-##########################
 # powershell empire
-##########################
 post_log_powershell(){
     log_success "powershell-empire install is done..."
     log "run sudo powershell-empire"
     log "username= empireadmin password= password123"
 }
-########################
 #ILSPY
-#######################
 install_ILSpy() {
     INSTALL_DIR="$HOME/Desktop/ILSpy"
     
@@ -1190,9 +1147,7 @@ install_ILSpy() {
     
     rm -f ./*.zip
 }
-###########################
 #pyinstractor
-##########################
 install_pyinstractor() {
     INSTALL_DIR="$HOME/Desktop/pyinstractor"
 
@@ -1220,9 +1175,7 @@ install_pyinstractor() {
     log_info "You can run it from: $INSTALL_DIR"
     return 0
 }
-# ===============================
 # kitty Configuration
-# ===============================
 #emoji
 install_emoji_font() {
     log " Checking for existing emoji font..."
@@ -1237,7 +1190,6 @@ install_emoji_font() {
 
     log_install " Emoji font not found. Installing..."
 
-    # Detect OS
     if [ -f /etc/arch-release ]; then
 
         sudo pacman -Sy --noconfirm noto-fonts-emoji
@@ -1421,9 +1373,7 @@ install_kitty() {
     log_info "more themes run --> kitten themes <> in terminal"
     log "change background theme type 'kitten themes' & press enter in terminal  "
 }
-#===========================
-#   fish_shell + oh-my-fish
-#===========================
+#   **fish_shell + oh-my-fish***
 fish_conf() {        
     log_download "install oh-my-fish..."
     # Check if fish is installed
@@ -1657,9 +1607,7 @@ install_fish() {
     log "reboot system to view changes...."
     log "change themes type fish_config & press enter in terminal"
 }
-# ===============================
 # Ulauncher Installation & Configuration
-# ===============================
 install_ulauncher() {
     log_install "install Ulauncher..."
     
@@ -1738,10 +1686,7 @@ install_ulauncher() {
         return 1
     fi
 }
-
-# ===============================
 # Configure Ulauncher with Catppuccin Theme
-# ===============================
 configure_ulauncher() {
     log_install "Configuring Ulauncher with Catppuccin theme..."
 
@@ -1876,9 +1821,7 @@ EOF
         log_error "Ulauncher failed to start. Check logs with: journalctl -xe"
     fi
 }
-#======================
 #   Wordlist
-#=====================
 post_install_wordlist() {
     log "Applying wordlists configuration..."
     
@@ -1891,9 +1834,7 @@ post_install_wordlist() {
     fi
     log_success "wordlists downlaod completed...."
 }
-# ===============================
 # Sound Configuration
-# ===============================
 post_install_sound() {
   log_success "🔊 Applying sound configuration..."
   mkdir -p ~/.config/wireplumber/wireplumber.conf.d/
@@ -1917,9 +1858,7 @@ EOF
   systemctl --user restart wireplumber pipewire pipewire-pulse
   log_success "Sound configuration applied!"
 }
-# ===============================
 # Oh My Zsh + Plugins
-# ===============================
 install_ohmyzsh() {
     if ! command -v zsh >/dev/null 2>&1; then
         log_install "install zsh..."
@@ -1972,9 +1911,7 @@ install_ohmyzsh() {
     log_success "Oh My Zsh installed with plugins."
     log_info " Run zsh to start using Oh-My-Zsh"
 }
-# ===============================
 # Burpsuite_pro
-# ===============================
 install_burpsuitepro() {
     local INSTALL_DIR="$HOME/Burpsuite-Professional"
     local BIN_PATH="/usr/local/bin/burpsuitepro"
@@ -1999,9 +1936,7 @@ install_burpsuitepro() {
     else
         log_info "BurpSuite not currently installed."
     fi
-    # ==========================================
     # Dependencies
-    # ==========================================
     log_install "install dependencies..."
 
     if [ "$OS_TYPE" = "arch" ]; then
@@ -2014,9 +1949,7 @@ install_burpsuitepro() {
         ensure_pkg "openjdk-17-jdk" || \
         ensure_pkg "default-jdk"
     fi
-    # ==========================================
     # Download Latest Jar to TEMP directory
-    # ==========================================
     log_download "download latest BurpSuite Pro to temporary directory..."
     
     cd "$TEMP_DIR" || return 1
@@ -2037,9 +1970,7 @@ install_burpsuitepro() {
     downloaded_version=$(echo "$downloaded_jar" | grep -oP 'v\K[0-9.]+')
     log_success "Downloaded Version: $downloaded_version"
 
-    # ==========================================
     #Versions compare
-    # ==========================================
     if [ -n "$installed_version" ]; then
         if [ "$installed_version" = "$downloaded_version" ]; then
             log_success "Downloaded version matches installed version ($installed_version)"
@@ -2087,21 +2018,13 @@ install_burpsuitepro() {
             return 0
         fi
     fi
-    # ==========================================
+
     #Move downloaded JAR to installation directory
-    # ==========================================
     log_install "Moving BurpSuite Pro v$downloaded_version to installation directory..."
-    
-    # Create installation directory if it doesn't exist
     mkdir -p "$INSTALL_DIR"
-    
-    # Move the JAR file from temp to installation directory
     mv "$TEMP_DIR/$downloaded_jar" "$INSTALL_DIR/"
     log_success "JAR file moved to $INSTALL_DIR"
-
-    # ==========================================
     # Loader from GitHub
-    # ==========================================
     log_download "download loader of Burpsuite-Professional..."
     
     # Clone loader repo to a temporary directory (different from JAR temp)
@@ -2119,13 +2042,9 @@ install_burpsuitepro() {
     
     # Copy loader to installation directory
     cp "$LOADER_TEMP_DIR/loader.jar" "$INSTALL_DIR/"
-    
     # Clean up loader temp directory
     rm -rf "$LOADER_TEMP_DIR"
-
-    # ==========================================
     # burp Setup
-    # ==========================================
     cd "$INSTALL_DIR" || return 1
     
     log_install "Creating launcher script..."
@@ -2165,9 +2084,7 @@ EOF
     cd "$CURRENT_DIR"
     return 0
 }
-# ===============================
 # Burpsuite_pro_latest
-# ===============================
 install_burpsuitepro_latest() {
     local INSTALL_DIR="$HOME/Burpsuitepro"
     local BIN_PATH="/usr/local/bin/burpsuitepro"
@@ -2196,9 +2113,7 @@ install_burpsuitepro_latest() {
     else
         log_info "BurpSuite not currently installed."
     fi
-    # ==========================================
     # Dependencies
-    # ==========================================
     log_install "install dependencies..."
 
     if [ "$OS_TYPE" = "arch" ]; then
@@ -2211,9 +2126,7 @@ install_burpsuitepro_latest() {
         ensure_pkg "openjdk-17-jdk" || \
         ensure_pkg "default-jdk"
     fi
-    # ==========================================
     # Download Latest sh to TEMP directory
-    # ==========================================
     log_download "download latest BurpSuite Pro to temporary directory..."
     
     cd "$TEMP_DIR" || return 1
@@ -2233,10 +2146,7 @@ install_burpsuitepro_latest() {
 
     downloaded_version=$(basename "$downloaded_sh" .sh | sed -E 's/.*_v([0-9_]+)/\1/' | tr '_' '.')
     log_success "Downloaded Version: $downloaded_version"
-
-    # ==========================================
     #Versions compare
-    # ==========================================
     if [ -n "$installed_version" ]; then
         if [ "$installed_version" = "$downloaded_version" ]; then
             log_success "Downloaded version matches installed version ($installed_version)"
@@ -2284,9 +2194,7 @@ install_burpsuitepro_latest() {
             return 0
         fi
     fi
-    # ==========================================
     #Move downloaded sh to installation directory
-    # ==========================================
     log_install "Moving BurpSuite Pro v$downloaded_version to installation directory..."
     
     # Create installation directory if it doesn't exist
@@ -2299,9 +2207,7 @@ install_burpsuitepro_latest() {
     ./burpsuite_pro_linux_v*.sh -q -dir "$INSTALL_DIR"
     log_success "installation file extract to $INSTALL_DIR"
 
-    # ==========================================
     # Loader from GitHub
-    # ==========================================
     log_download "download loader of Burpsuite-Professional..."
     
     # Clone loader repo to a temporary directory (different from JAR temp)
@@ -2357,9 +2263,7 @@ install_burpsuitepro_latest() {
     cd "$CURRENT_DIR"
     return 0
 }
-# ===============================
 # SSH Configuration
-# ===============================
 post_install_ssh() {
     log "Configuring SSH..."
     if [ "$OS_TYPE" = "arch" ]; then
@@ -2372,9 +2276,7 @@ post_install_ssh() {
     log_success "SSH enabled!"
 }
 
-# ===============================
 # VMware Configuration
-# ===============================
 post_vmware_setup() {
     log "VMware setup..."
     if [ "$OS_TYPE" = "arch" ]; then
@@ -2388,9 +2290,7 @@ post_vmware_setup() {
     log_success "VMware Tools configured. Reboot recommended."
 }
 
-# ===============================
 # Special Tool Installations
-# ===============================
 install_ghauri() {
     if ! command -v ghauri >/dev/null; then
         log "install Ghauri..."
@@ -2475,9 +2375,7 @@ install_netdiscover() {
         log_success "netdiscover already installed."
     fi
 }
-# ===============================
 # Core Dependencies Installation
-# ===============================
 install_core_dependencies() {
 
     local core_deps=("curl" "wget" "git" "unzip" "python3")
@@ -2564,9 +2462,7 @@ install_core_dependencies() {
     echo -e "${GREEN}🎉 All core dependencies installed & verified${RESET}"
     return 0
 }
-# ===============================
 # Main Script
-# ===============================
 main() {
 
     # Trap Ctrl+C
@@ -2597,9 +2493,7 @@ main() {
         }
     fi
 
-    # ===============================
     # Interactive Menu Loop
-    # ===============================
     while true; do
         clear
         show_banner
