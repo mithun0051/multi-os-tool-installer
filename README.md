@@ -18,6 +18,8 @@
 
 ### Interface
 ![Interface](screenshots/arch.png)
+### installation
+![installation](screenshots/installation.png)
 ### Fish Shell with kitty
 ![Fish Shell](screenshots/kali_split.png)
 ## 📋 Table of Contents
