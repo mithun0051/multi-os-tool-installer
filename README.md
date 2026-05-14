@@ -17,9 +17,9 @@
 ## 📸 Screenshots
 
 ### Interface
-![Interface](screenshots/tool-preview.png)
+![Interface](screenshots/arch.png)
 ### Fish Shell with kitty
-![Fish Shell](screenshots/split.png)
+![Fish Shell](screenshots/kali_split.png)
 ## 📋 Table of Contents
 
 - [Features](#-features)
