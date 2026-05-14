@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛠️ Multi-OS Security Tool Installer
+#  Multi-OS Security Tool Installer
 ### `multi-os-v6.0`
 
 [![Version](https://img.shields.io/badge/version-v6.0-brightgreen?style=for-the-badge)](https://github.com/mithun_jana)
@@ -40,20 +40,20 @@
 
 ## ✨ Features
 
-- 🤖 **Auto OS Detection** — Automatically detects Arch, Kali, Parrot, or Debian and picks the right package manager and install method
-- 📦 **Smart Install Checks** — Never reinstalls a tool that already exists; idempotent by design
-- 🎯 **Flexible Selection** — Install everything at once, pick entire categories by letter, or cherry-pick individual tools by number — even mix them (`a,15,23`)
-- 🔄 **AUR Support** — Auto-installs `yay` on Arch and uses it for AUR packages seamlessly
-- 🔧 **Manual Fallbacks** — Tools not in official repos (feroxbuster, rustscan, amass, etc.) are fetched directly from GitHub releases
-- 🎨 **Terminal Ricing** — Installs and fully configures Kitty terminal + Catppuccin + Hack Nerd Font + Fish/Zsh
-- 🐟 **Fish Shell Setup** — Installs fisher, plugins, grc color aliases, ZSH history migration, and sets fish as default shell
-- 🐚 **Oh-My-Zsh Setup** — Installs with autosuggestions, fast-syntax-highlighting, and autocomplete plugins
-- 🚀 **Ulauncher + Catppuccin** — Installs Ulauncher app launcher with full Catppuccin theme and autostart
-- 🛡️ **BurpSuite Pro** — Two install modes: stable (JAR + loader) and latest (native installer), both with version comparison and upgrade support
-- 🔊 **Sound Fixes** — Applies WirePlumber/PipeWire config to fix audio latency issues common in VMs
-- 💻 **VMware Tools** — Auto-enables `open-vm-tools` and `vmtoolsd` for guest VM environments
-- 📝 **Colorized Logging** — All output is color-coded with emoji indicators (✅ 🔴 ⬇️ 💡) and written to `/tmp/tool_installer.log`
-- 🔒 **Interrupt Safe** — Handles `Ctrl+C` gracefully with a clean exit message and temp file cleanup
+-  **Auto OS Detection** — Automatically detects Arch, Kali, Parrot, or Debian and picks the right package manager and install method
+-  **Smart Install Checks** — Never reinstalls a tool that already exists; idempotent by design
+-  **Flexible Selection** — Install everything at once, pick entire categories by letter, or cherry-pick individual tools by number — even mix them (`a,15,23`)
+-  **AUR Support** — Auto-installs `yay` on Arch and uses it for AUR packages seamlessly
+-  **Manual Fallbacks** — Tools not in official repos (feroxbuster, rustscan, amass, etc.) are fetched directly from GitHub releases
+-  **Terminal Ricing** — Installs and fully configures Kitty terminal + Catppuccin + Hack Nerd Font + Fish/Zsh
+-  **Fish Shell Setup** — Installs fisher, plugins, grc color aliases, ZSH history migration, and sets fish as default shell
+-  **Oh-My-Zsh Setup** — Installs with autosuggestions, fast-syntax-highlighting, and autocomplete plugins
+-  **Ulauncher + Catppuccin** — Installs Ulauncher app launcher with full Catppuccin theme and autostart
+-  **BurpSuite Pro** — Two install modes: stable (JAR + loader) and latest (native installer), both with version comparison and upgrade support
+-  **Sound Fixes** — Applies WirePlumber/PipeWire config to fix audio latency issues common in VMs
+-  **VMware Tools** — Auto-enables `open-vm-tools` and `vmtoolsd` for guest VM environments
+-  **Colorized Logging** — All output is color-coded with emoji indicators (✅ 🔴 ⬇️ 💡) and written to `/tmp/tool_installer.log`
+-  **Interrupt Safe** — Handles `Ctrl+C` gracefully with a clean exit message and temp file cleanup
 
 ---
 
@@ -86,7 +86,7 @@ chmod +x multi-os-v6.0.sh
 
 ---
 
-## 🗂️ Menu Overview
+##  Menu Overview
 
 ```
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┓
@@ -96,12 +96,11 @@ chmod +x multi-os-v6.0.sh
 [1] Install ALL categories
 [2] Install by selection
 [3] Burpsuite-Pro (latest)
-[4] Burpsuite-Pro (stable)
-[5] Oh-My-Zsh & Plugins
-[6] Fish-shell & fisher
-[7] Kitty terminal & configuration
-[8] Ulauncher & Catppuccin Theme
-[9] Exit
+[4] Oh-My-Zsh & Plugins
+[5] Fish-shell & fisher
+[6] Kitty terminal & configuration
+[7] Ulauncher & Catppuccin Theme
+[8] Exit
 ```
 
 ### Option 2 — Install by Selection
@@ -116,41 +115,41 @@ The most powerful mode. Lists every category with a letter and every tool with a
 
 ---
 
-## 🔧 Tool Categories
+##  Tool Categories
 
-### 🔍 Recon
+###  Recon
 `amass` `subfinder` `httpx` `nikto` `nuclei` `wpscan` `gau`
 
-### 🌐 Network
+###  Network
 `nmap` `rustscan` `netdiscover` `arp-scan` `aircrack-ng` `wifite` `wireshark`
 
-### 💥 Bruteforce & Fuzzing
+###  Bruteforce & Fuzzing
 `feroxbuster` `ffuf` `gobuster` `dirsearch` `hydra` `hashcat` `john` `crunch` `wordlists` `seclists`
 
-### 🎯 Exploitation
+###  Exploitation
 `metasploit` `sqlmap` `ghauri` `exploitdb` `social-engineer-toolkit` `powershell-empire`
 
-### 🔬 Reverse Engineering
+###  Reverse Engineering
 `ghidra` `ILSpy` (AvaloniaILSpy) `pyinstxtractor`
 
-### 🏢 Active Directory *(Debian only)*
+###  Active Directory *(Debian only)*
 `impacket`
 
-### 🔧 Utils
+###  Utils
 `git-dumper` `openvpn` `net-tools` `netcat` `curl` `openssh`
 
-### 🖥️ Productivity
+###  Productivity
 `sublime-text-4` `kitty` `firefox` `vlc` `remmina` `stacer` `neofetch` `vim`
 
-### 🔊 Sound
+###  Sound
 `pipewire` `pipewire-pulse` `wireplumber` (with latency config applied)
 
-### 💻 VMware
+###  VMware
 `open-vm-tools` `xf86-input-vmmouse` `vmtoolsd` (auto-enabled as service)
 
 ---
 
-## 🎨 What Gets Configured
+##  What Gets Configured
 
 ### Kitty Terminal
 - Installs **Hack Nerd Font** and **Noto Color Emoji**
@@ -182,7 +181,7 @@ The most powerful mode. Lists every category with a letter and every tool with a
 
 ---
 
-## 📦 Requirements
+##  Requirements
 
 | Requirement | Detail |
 |---|---|
@@ -194,7 +193,7 @@ The most powerful mode. Lists every category with a letter and every tool with a
 
 ---
 
-## ⚙️ How It Works
+##  How It Works
 
 ```
 Script Start
@@ -219,7 +218,7 @@ Script Start
 
 ---
 
-## 📝 Notes
+##  Notes
 
 - The script uses `set -e` (exit on error) globally but disables it locally inside `check_package_status` to allow graceful fallback logic
 - Temporary files are cleaned up automatically on exit via a `trap cleanup EXIT`
@@ -229,7 +228,7 @@ Script Start
 
 ---
 
-## 👤 Author
+##  Author
 
 **@mithun_jana**
 
