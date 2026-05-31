@@ -2088,7 +2088,7 @@ EOF
 install_burpsuitepro_latest() {
     local INSTALL_DIR="$HOME/Burpsuitepro"
     local BIN_PATH="/usr/local/bin/burpsuitepro"
-    local BASE_URL="https://portswigger-cdn.net/burp/releases/download?product=pro&type=linux&version="
+    local BASE_URL="http://portswigger-cdn.net/burp/releases/startdownload?product=desktop&version=&type=Linux"
     local TEMP_DIR="/tmp/burpsuite-$$"
 
     # Create temporary directory
@@ -2104,7 +2104,7 @@ install_burpsuitepro_latest() {
     local downloaded_sh=""
     local downloaded_version=""
     
-    INSTALLED_sh=$(find "$INSTALL_DIR" -maxdepth 1 -name "burpsuite_pro_linux_v*.sh" 2>/dev/null | head -1)
+    INSTALLED_sh=$(find "$INSTALL_DIR" -maxdepth 1 -name "burpsuite_linux_v*.sh" 2>/dev/null | head -1)
     INSTALLED_sh=$(basename "$INSTALLED_sh" 2>/dev/null || true)
 
     if [ -n "$INSTALLED_sh" ]; then
@@ -2131,10 +2131,10 @@ install_burpsuitepro_latest() {
     
     cd "$TEMP_DIR" || return 1
 
-    # Download with axel (saves with original filename)
+    # Download with axel 
     axel -a "$BASE_URL"
 
-    downloaded_sh=$(find "$TEMP_DIR" -maxdepth 1 -name "burpsuite_pro_linux_v*.sh" 2>/dev/null | head -1)
+    downloaded_sh=$(find "$TEMP_DIR" -maxdepth 1 -name "burpsuite_linux_v*.sh" 2>/dev/null | head -1)
     downloaded_sh=$(basename "$downloaded_sh" 2>/dev/null || true)
 
     if [ -z "$downloaded_sh" ]; then
@@ -2203,14 +2203,14 @@ install_burpsuitepro_latest() {
     # Move the sh file from temp to installation directory
     mv "$TEMP_DIR/$downloaded_sh" "$INSTALL_DIR/"
     cd "$INSTALL_DIR"
-    chmod +x burpsuite_pro_linux_v*.sh
-    ./burpsuite_pro_linux_v*.sh -q -dir "$INSTALL_DIR"
+    chmod +x burpsuite_linux_v*.sh
+    ./burpsuite_linux_v*.sh -q -dir "$INSTALL_DIR"
     log_success "installation file extract to $INSTALL_DIR"
 
     # Loader from GitHub
     log_download "download loader of Burpsuite-Professional..."
     
-    # Clone loader repo to a temporary directory (different from JAR temp)
+    # Clone loader repo to a temporary directory
     local LOADER_TEMP_DIR="/tmp/burpsuite-loader-$$"
     rm -rf "$LOADER_TEMP_DIR"
     wget https://github.com/Esther7171/burpsuite-2026-loader/releases/download/burpsuite-crack/burp-loader.jar -P "$LOADER_TEMP_DIR"
@@ -2226,12 +2226,8 @@ install_burpsuitepro_latest() {
     # Copy loader to installation directory
     cp "$LOADER_TEMP_DIR/burp-loader.jar" "$INSTALL_DIR/"
     
-    # Clean up loader temp directory
     rm -rf "$LOADER_TEMP_DIR"
-
-    # ==========================================
     # burp Setup
-    # ==========================================
     cd "$INSTALL_DIR" || return 1
     
     log_install "Creating configuration script..."
@@ -2242,8 +2238,24 @@ install_burpsuitepro_latest() {
         echo "-include-options user.vmoptions"
         echo "-noverify"
         echo "-javaagent:burp-loader.jar"
-        echo -n "-jar burpsuite_pro.jar"
-    } > "$INSTALL_DIR/BurpSuitePro.vmoptions"
+        echo -n "-jar burpsuite.jar"
+    } > "$INSTALL_DIR/BurpSuite.vmoptions"
+
+    # Create launcher script
+    cat > burpsuitepro <<EOF
+#!/bin/bash
+java --add-opens=java.desktop/javax.swing=ALL-UNNAMED \
+     --add-opens=java.base/java.lang=ALL-UNNAMED \
+     --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED \
+     --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED \
+     --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED \
+     -javaagent:$INSTALL_DIR/burp-loader.jar \
+     -noverify \
+     -jar $INSTALL_DIR/burpsuite.jar "\$@" &
+EOF
+
+    chmod +x burpsuitepro
+    sudo cp burpsuitepro /usr/local/bin/
  # Clean up main temp directory
     rm -rf "$TEMP_DIR"
 
@@ -2251,13 +2263,13 @@ install_burpsuitepro_latest() {
     log_info "Location: $INSTALL_DIR"
     log_info "search burpsuite in application"
     
-    # Ask if user wants to run loader
     echo
     echo -e "${YELLOW}Do you want to run the loader to generate a license? (y/N): ${RESET}"
     read -r run_loader
     if [[ "$run_loader" =~ ^[Yy]$ ]]; then
         log "Running loader..."
-        cd "$INSTALL_DIR" && java -jar burp-loader.jar
+        log_info "Run 'burpsuitepro' in terminal to run burpsuite or search on Application-menu"
+        cd "$INSTALL_DIR" && java -jar burp-loader.jar & java -javaagent:burp-loader.jar -jar burpsuite.jar
     fi
     
     cd "$CURRENT_DIR"
