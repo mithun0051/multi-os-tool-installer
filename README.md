@@ -1,7 +1,6 @@
 <div align="center">
 
 #  Multi-OS Security Tool Installer
-### `multi-os-v6.0`
 
 [![Version](https://img.shields.io/badge/version-v6.0-brightgreen?style=for-the-badge)](https://github.com/mithun_jana)
 [![Shell](https://img.shields.io/badge/shell-bash-blue?style=for-the-badge&logo=gnu-bash)](https://www.gnu.org/software/bash/)
