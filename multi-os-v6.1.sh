@@ -15,7 +15,7 @@ LOG_FILE="/tmp/tool_installer.log"
 DEBUG=false
 show_banner() {
     echo -e "${GREEN}┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┓${RESET}"
-    echo -e "${GREEN}┃   ${AQUA}Multi-OS Tool Installer${GREEN}           ┃ ${YELLOW} v6.0   ${GREEN}┃${RESET}"
+    echo -e "${GREEN}┃   ${AQUA}Multi-OS Tool Installer${GREEN}           ┃ ${YELLOW} v6.1   ${GREEN}┃${RESET}"
     echo -e "${GREEN}┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━┛${RESET}"
     echo -e "  🛠️  ${GREEN}Developed by: ${YELLOW}@mithun_jana${RESET}"
     echo -e "  👤  ${GREEN}User: ${MAGENTA}$USER${RESET}"
