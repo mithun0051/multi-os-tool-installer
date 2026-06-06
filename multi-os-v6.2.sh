@@ -1244,106 +1244,84 @@ done
     echo "nano syntax-highlighting configuration install.."
     curl https://raw.githubusercontent.com/scopatz/nanorc/master/install.sh | sh
     cat > ~/.config/kitty/kitty.conf <<'EOF'
-# ==================================================
-# CATPPUCCIN THEME
-# ==================================================
-include /home/$USER/.config/kitty/themes/catppuccin/themes/mocha.conf
+enabled_layouts splits,stack
+layout splits
 
+# SHELL
+shell /bin/fish
+
+# THEME
+include /home/nulluser/.config/kitty/themes/catppuccin/themes/mocha.conf
 allow_remote_control yes
 listen_on unix:/tmp/kitty-$PID
-# ==================================================
-# FONT
-# ==================================================
-font_family      family="Hack Nerd Font"
-bold_font        auto
-italic_font      auto
-bold_italic_font auto
 font_size 17
 adjust_line_height 110%
 adjust_column_width 100%
 
-# ==================================================
 # CURSOR
-# ==================================================
 cursor_shape block
 cursor_blink_interval 0
 cursor_stop_blinking_after 15.0
 cursor_trail 200
 cursor_trail_decay 0.1 0.4
 cursor_trail_start_threshold 2
-cursor_trail_color none
-# ==================================================
+
+# notification
+notify_on_cmd_finish invisible
+
 # SCROLLBACK
-# ==================================================
 scrollback_lines 10000
 wheel_scroll_multiplier 5.0
 
-# ==================================================
 # MOUSE
-# ==================================================
 copy_on_select yes
 mouse_hide_wait 2.0
 
-# ==================================================
 # PERFORMANCE
-# ==================================================
-repaint_delay 10
-input_delay 3
+input_delay 0
+repaint_delay 2
 sync_to_monitor yes
-repaint_delay 10
-input_delay 3
-# ==================================================
+
 # WINDOW
-# ==================================================
 remember_window_size yes
 initial_window_width 1000
 initial_window_height 700
 window_padding_width 8
+dynamic_background_opacity yes
+background_opacity 1
+background_blur 0
 
-# Transparency (required for blur via picom)
-background_opacity 1.0
-
-# ==================================================
-# TAB BAR
-# ==================================================
+# TAB_BAR
 tab_bar_style powerline
 tab_powerline_style angled
 active_tab_font_style bold
 inactive_tab_font_style normal
 tab_title_template "{title}"
 
-# ==================================================
 # KEY BINDINGS
-# ==================================================
 map ctrl+shift+c copy_to_clipboard
 map ctrl+shift+v paste_from_clipboard
-
 map ctrl+t new_tab
 map ctrl+shift+w close_tab
 map ctrl+shift+enter new_window
-
 map shift+ctrl+right next_tab
 map shift+ctrl+left previous_tab
 map alt+f toggle_fullscreen
 map ctrl+a launch --location=hsplit --cwd=current
+map ctrl+v launch --location=vsplit
 map ctrl+left neighboring_window left
 map ctrl+right neighboring_window right
 map ctrl+up neighboring_window up
 map ctrl+down neighboring_window down
 map ctrl+shift+f toggle_layout stack
+map shift+z toggle_layout stack
+mouse_map middle paste_from_clipboard
 
-# ==================================================
-# FOCUS CURRENT SPLIT + FULLSCREEN (ZOOM)
-# ==================================================
-map ctrl+z toggle_layout stack
-# ==================================================
-# SHELL
-# ==================================================
-shell /bin/zsh
-# ==================================================
-# MISC
-# ==================================================
-enable_audio_bell no
+# FONTS
+font_family      family="Hack Nerd Font"
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
 EOF
 
 }
